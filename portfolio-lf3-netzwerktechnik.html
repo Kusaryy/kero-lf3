@@ -1,0 +1,2117 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio – Lernfeld 3: Netzwerktechnik | Kerem Y. Uzun</title>
+    <style>
+      :root {
+        --cyan-50: #effcff;
+        --cyan-100: #d7f7ff;
+        --baby-blue: #9be8ff;
+        --cyan: #44d9ff;
+        --accent: #00c8ff;
+        --turquoise: #2af0d3;
+        --dark: #061321;
+        --ink: #0d2033;
+        --muted: #526578;
+        --line: #c9eaf5;
+        --panel: #ffffff;
+        --soft: #f5fbfe;
+        --slate: #12273a;
+        --shadow: 0 20px 60px rgba(6, 19, 33, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        line-height: 1.58;
+        background:
+          radial-gradient(circle at top left, rgba(155, 232, 255, 0.36), transparent 32rem),
+          linear-gradient(135deg, #f8fdff 0%, #eef9ff 45%, #ffffff 100%);
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        content: "";
+        background-image:
+          linear-gradient(rgba(6, 19, 33, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 19, 33, 0.045) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 88%);
+      }
+
+      body::after {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        content: "";
+        background:
+          linear-gradient(115deg, transparent 0 18%, rgba(0, 200, 255, 0.13) 18.2%, transparent 18.6% 44%, rgba(42, 240, 211, 0.12) 44.2%, transparent 44.7%),
+          linear-gradient(35deg, transparent 0 72%, rgba(0, 200, 255, 0.12) 72.2%, transparent 72.8%);
+      }
+
+      a {
+        color: #0079a8;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .doc-shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .doc-bar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid rgba(6, 19, 33, 0.08);
+        backdrop-filter: blur(18px);
+        background: rgba(248, 253, 255, 0.82);
+      }
+
+      .doc-bar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: min(1180px, calc(100% - 32px));
+        min-height: 58px;
+        margin: 0 auto;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 0.86rem;
+        letter-spacing: 0.01em;
+      }
+
+      .doc-bar strong {
+        color: var(--dark);
+      }
+
+      .nav-pills {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .nav-pills a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        border: 1px solid rgba(0, 200, 255, 0.22);
+        border-radius: 999px;
+        padding: 4px 10px;
+        color: var(--slate);
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.78);
+      }
+
+      .cover {
+        position: relative;
+        display: grid;
+        min-height: 920px;
+        overflow: hidden;
+        margin: 28px 0 34px;
+        border: 1px solid rgba(0, 200, 255, 0.22);
+        border-radius: 28px;
+        background:
+          linear-gradient(135deg, rgba(6, 19, 33, 0.96), rgba(9, 37, 59, 0.94)),
+          radial-gradient(circle at 75% 20%, rgba(68, 217, 255, 0.35), transparent 26rem);
+        color: white;
+        box-shadow: var(--shadow);
+      }
+
+      .cover-grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.34;
+        background-image:
+          linear-gradient(rgba(155, 232, 255, 0.18) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(155, 232, 255, 0.18) 1px, transparent 1px);
+        background-size: 38px 38px;
+      }
+
+      .circuit-lines {
+        position: absolute;
+        inset: 0;
+        opacity: 0.86;
+      }
+
+      .cover-content {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        align-content: space-between;
+        padding: clamp(34px, 6vw, 76px);
+      }
+
+      .school-chip {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        gap: 10px;
+        border: 1px solid rgba(155, 232, 255, 0.38);
+        border-radius: 999px;
+        padding: 9px 14px;
+        color: #dff9ff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .node-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 99px;
+        background: var(--turquoise);
+        box-shadow: 0 0 18px rgba(42, 240, 211, 0.85);
+      }
+
+      .cover-title {
+        max-width: 860px;
+        margin-top: 132px;
+      }
+
+      .eyebrow {
+        color: var(--baby-blue);
+        font-size: 0.84rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        margin-top: 18px;
+        font-size: clamp(3rem, 7vw, 6.6rem);
+        font-weight: 850;
+      }
+
+      .cover-subtitle {
+        max-width: 720px;
+        margin-top: 20px;
+        color: #d7f7ff;
+        font-size: clamp(1.2rem, 2.1vw, 1.8rem);
+        font-weight: 500;
+      }
+
+      .cover-meta {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 96px;
+      }
+
+      .meta-card,
+      .glass-card {
+        border: 1px solid rgba(155, 232, 255, 0.24);
+        border-radius: 16px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+      }
+
+      .meta-card span {
+        display: block;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .meta-card strong {
+        display: block;
+        margin-top: 6px;
+        color: #ffffff;
+        font-size: 1.04rem;
+      }
+
+      .group-mark {
+        position: absolute;
+        right: clamp(28px, 7vw, 92px);
+        bottom: clamp(32px, 7vw, 92px);
+        z-index: 1;
+        color: rgba(155, 232, 255, 0.12);
+        font-size: clamp(10rem, 22vw, 18rem);
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .section {
+        position: relative;
+        margin: 28px 0;
+        border: 1px solid rgba(6, 19, 33, 0.08);
+        border-radius: 24px;
+        padding: clamp(24px, 4vw, 44px);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 14px 38px rgba(6, 19, 33, 0.08);
+      }
+
+      .section::before {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        content: "27";
+        color: rgba(0, 200, 255, 0.11);
+        font-size: 4rem;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .section-header {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .section-kicker {
+        margin-bottom: 8px;
+        color: #0879a7;
+        font-size: 0.78rem;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        color: var(--dark);
+        font-size: clamp(1.9rem, 3vw, 2.7rem);
+      }
+
+      h3 {
+        color: var(--slate);
+        font-size: 1.24rem;
+      }
+
+      .lead {
+        max-width: 860px;
+        color: #264056;
+        font-size: 1.07rem;
+      }
+
+      .toc-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        counter-reset: toc;
+      }
+
+      .toc-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+        color: var(--ink);
+        text-decoration: none;
+        background: linear-gradient(135deg, #ffffff, var(--cyan-50));
+      }
+
+      .toc-item::before {
+        display: grid;
+        place-items: center;
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        color: var(--dark);
+        font-weight: 850;
+        content: counter(toc);
+        counter-increment: toc;
+        background: var(--baby-blue);
+      }
+
+      .grid-2,
+      .grid-3,
+      .grid-4 {
+        display: grid;
+        gap: 16px;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .info-card,
+      .metric-card,
+      .aha-card,
+      .glossary-card,
+      .competency-card,
+      .trouble-card {
+        border: 1px solid rgba(6, 19, 33, 0.08);
+        border-radius: 18px;
+        background: var(--panel);
+        box-shadow: 0 10px 28px rgba(6, 19, 33, 0.06);
+      }
+
+      .info-card {
+        padding: 18px;
+      }
+
+      .info-card p,
+      .competency-card p,
+      .glossary-card p,
+      .aha-card p {
+        color: #40586b;
+      }
+
+      .icon-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .icon {
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(0, 200, 255, 0.28);
+        border-radius: 10px;
+        color: #006e98;
+        background: linear-gradient(135deg, var(--cyan-100), #ffffff);
+      }
+
+      .icon svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .level-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .level-card {
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid rgba(6, 19, 33, 0.08);
+        background: linear-gradient(135deg, #ffffff, #f2fbff);
+      }
+
+      .level-card strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--dark);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 30px;
+        border-radius: 999px;
+        padding: 5px 11px;
+        font-size: 0.78rem;
+        font-weight: 820;
+        white-space: nowrap;
+      }
+
+      .badge-basic {
+        color: #08634c;
+        background: #dff8ee;
+      }
+
+      .badge-pro {
+        color: #77520a;
+        background: #fff1bf;
+      }
+
+      .badge-expert {
+        color: #8b1d2d;
+        background: #ffe0e5;
+      }
+
+      .badge-cyan {
+        color: #006483;
+        background: var(--cyan-100);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid rgba(6, 19, 33, 0.08);
+        border-radius: 18px;
+        background: white;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 780px;
+      }
+
+      th,
+      td {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(6, 19, 33, 0.08);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--dark);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, var(--cyan-100), #ffffff);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .highlight {
+        border-left: 4px solid var(--accent);
+        padding: 16px 18px;
+        border-radius: 16px;
+        color: #2b4559;
+        background: linear-gradient(135deg, rgba(215, 247, 255, 0.82), rgba(255, 255, 255, 0.92));
+      }
+
+      .feature-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .feature-row {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .feature-dot {
+        width: 10px;
+        height: 10px;
+        margin-top: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 14px rgba(0, 200, 255, 0.45);
+      }
+
+      .timeline {
+        position: relative;
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+        padding-left: 22px;
+      }
+
+      .timeline::before {
+        position: absolute;
+        top: 14px;
+        bottom: 14px;
+        left: 7px;
+        width: 2px;
+        border-radius: 99px;
+        content: "";
+        background: linear-gradient(to bottom, var(--accent), var(--turquoise));
+      }
+
+      .timeline-step {
+        position: relative;
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 16px;
+        border: 1px solid rgba(0, 200, 255, 0.17);
+        border-radius: 18px;
+        padding: 16px;
+        background: linear-gradient(135deg, #ffffff, #f4fcff);
+        opacity: 0;
+        transform: translateY(14px);
+        animation: stepIn 0.62s ease forwards;
+        animation-delay: calc(var(--i) * 0.14s);
+      }
+
+      .timeline-step::before {
+        position: absolute;
+        top: 20px;
+        left: -21px;
+        width: 14px;
+        height: 14px;
+        border: 3px solid white;
+        border-radius: 50%;
+        content: "";
+        background: var(--accent);
+        box-shadow: 0 0 0 4px rgba(0, 200, 255, 0.16);
+      }
+
+      .timeline-date {
+        color: #006e98;
+        font-weight: 850;
+      }
+
+      @keyframes stepIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .chart-panel {
+        min-height: 100%;
+        border: 1px solid rgba(6, 19, 33, 0.08);
+        border-radius: 20px;
+        padding: 20px;
+        background: linear-gradient(135deg, #ffffff, #f5fcff);
+      }
+
+      .chart-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      .radar-wrap {
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      .radar-label {
+        fill: #18334a;
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .bar-stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .bar-row {
+        display: grid;
+        gap: 7px;
+      }
+
+      .bar-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--slate);
+        font-size: 0.92rem;
+        font-weight: 720;
+      }
+
+      .bar-track {
+        position: relative;
+        height: 16px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e8f4f8;
+      }
+
+      .bar-start,
+      .bar-current {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: inherit;
+      }
+
+      .bar-start {
+        width: var(--start);
+        background: rgba(8, 121, 167, 0.22);
+      }
+
+      .bar-current {
+        width: var(--current);
+        background: linear-gradient(90deg, var(--accent), var(--turquoise));
+      }
+
+      .bar-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .legend-swatch {
+        display: inline-block;
+        width: 32px;
+        height: 9px;
+        margin-right: 6px;
+        border-radius: 999px;
+        vertical-align: middle;
+      }
+
+      .osi-grid {
+        display: grid;
+        gap: 8px;
+      }
+
+      .osi-layer {
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(6, 19, 33, 0.08);
+        border-radius: 12px;
+        padding: 10px 12px;
+        background: #ffffff;
+      }
+
+      .osi-number {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+        color: var(--dark);
+        font-weight: 850;
+        background: var(--baby-blue);
+      }
+
+      .pdu {
+        color: #006e98;
+        font-size: 0.82rem;
+        font-weight: 820;
+      }
+
+      .encapsulation {
+        position: relative;
+        margin-top: 16px;
+        border: 1px dashed rgba(0, 200, 255, 0.48);
+        border-radius: 16px;
+        padding: 16px;
+        color: #244155;
+        background: rgba(239, 252, 255, 0.78);
+      }
+
+      .data-pulse {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        background: var(--accent);
+        box-shadow: 0 0 18px rgba(0, 200, 255, 0.75);
+        animation: packetFlow 3.2s ease-in-out infinite;
+      }
+
+      @keyframes packetFlow {
+        0% {
+          transform: translateY(0);
+          opacity: 0.35;
+        }
+        50% {
+          transform: translateY(120px);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 0.35;
+        }
+      }
+
+      .topology svg,
+      .radar-wrap svg {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .aha-card {
+        padding: 18px;
+      }
+
+      .aha-card strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--dark);
+      }
+
+      .trouble-card {
+        overflow: hidden;
+      }
+
+      .trouble-head {
+        padding: 18px;
+        color: white;
+        background: linear-gradient(135deg, var(--dark), #103a56);
+      }
+
+      .trouble-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+      }
+
+      .trouble-step {
+        min-height: 160px;
+        padding: 18px;
+        border-right: 1px solid rgba(6, 19, 33, 0.08);
+      }
+
+      .trouble-step:last-child {
+        border-right: 0;
+      }
+
+      .trouble-step span {
+        display: inline-flex;
+        margin-bottom: 10px;
+        color: #006e98;
+        font-size: 0.78rem;
+        font-weight: 850;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .quote-box {
+        border: 1px solid rgba(0, 200, 255, 0.18);
+        border-radius: 20px;
+        padding: 22px;
+        color: #263f54;
+        background: linear-gradient(135deg, #ffffff, var(--cyan-50));
+      }
+
+      .quote-box h3 {
+        margin-bottom: 10px;
+      }
+
+      .team-map {
+        display: grid;
+        grid-template-columns: 1.3fr repeat(4, minmax(120px, 1fr));
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .team-core,
+      .team-member {
+        border: 1px solid rgba(6, 19, 33, 0.08);
+        border-radius: 18px;
+        padding: 18px;
+        background: #ffffff;
+      }
+
+      .team-core {
+        color: white;
+        background:
+          linear-gradient(135deg, rgba(6, 19, 33, 0.96), rgba(9, 48, 72, 0.92)),
+          radial-gradient(circle at top right, rgba(68, 217, 255, 0.35), transparent 14rem);
+      }
+
+      .team-member strong {
+        display: block;
+        color: var(--dark);
+      }
+
+      .glossary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .glossary-card {
+        padding: 16px;
+      }
+
+      .glossary-card strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--dark);
+      }
+
+      .appendix-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .competency-card {
+        overflow: hidden;
+      }
+
+      .competency-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 16px 18px;
+        background: linear-gradient(135deg, var(--cyan-100), #ffffff);
+      }
+
+      .competency-body {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+      }
+
+      .competency-level {
+        padding: 16px 18px;
+        border-right: 1px solid rgba(6, 19, 33, 0.08);
+      }
+
+      .competency-level:last-child {
+        border-right: 0;
+      }
+
+      .competency-level span {
+        display: block;
+        margin-bottom: 6px;
+        color: #006e98;
+        font-size: 0.78rem;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .signature {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 20px;
+      }
+
+      .signature-line {
+        border-top: 1px solid rgba(6, 19, 33, 0.24);
+        padding-top: 8px;
+        color: var(--muted);
+      }
+
+      .print-note {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .page-break {
+        break-before: page;
+      }
+
+      @media (max-width: 980px) {
+        .cover-meta,
+        .grid-3,
+        .grid-4,
+        .glossary-grid,
+        .competency-body,
+        .trouble-grid,
+        .team-map {
+          grid-template-columns: 1fr;
+        }
+
+        .grid-2,
+        .toc-grid,
+        .level-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .timeline-step {
+          grid-template-columns: 1fr;
+        }
+
+        .doc-bar-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 12px 0;
+        }
+
+        .nav-pills {
+          justify-content: flex-start;
+        }
+
+        .cover {
+          min-height: auto;
+        }
+
+        .cover-title {
+          margin-top: 80px;
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 18mm 14mm 18mm;
+        }
+
+        body {
+          background: white;
+          color: #111827;
+          font-size: 10.2pt;
+        }
+
+        body::before,
+        body::after,
+        .doc-bar {
+          display: none;
+        }
+
+        .doc-shell {
+          width: 100%;
+        }
+
+        .cover,
+        .section {
+          margin: 0 0 10mm;
+          border-radius: 0;
+          box-shadow: none;
+          break-inside: avoid;
+        }
+
+        .cover {
+          min-height: 260mm;
+          break-after: page;
+        }
+
+        .section {
+          border: 1px solid #d9eaf0;
+          padding: 14mm 12mm;
+        }
+
+        .section::before {
+          opacity: 0.7;
+        }
+
+        .page-break {
+          break-before: page;
+        }
+
+        .timeline-step {
+          opacity: 1;
+          transform: none;
+          animation: none;
+        }
+
+        .data-pulse {
+          animation: none;
+        }
+
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="doc-bar">
+      <div class="doc-bar-inner">
+        <div><strong>Kerem Y. Uzun</strong> | LF3 Netzwerktechnik | Gruppe 27 | BS 14 ITECH</div>
+        <nav class="nav-pills" aria-label="Dokumentnavigation">
+          <a href="#einleitung">Einleitung</a>
+          <a href="#kompetenzen">Kompetenzen</a>
+          <a href="#entwicklung">Entwicklung</a>
+          <a href="#grafiken">Grafiken</a>
+          <a href="#reflexion">Reflexion</a>
+          <a href="#anhang">Anhang</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="doc-shell">
+      <section class="cover" aria-label="Deckblatt">
+        <div class="cover-grid"></div>
+        <svg class="circuit-lines" viewBox="0 0 1200 900" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="circuit" x1="0" x2="1" y1="0" y2="1">
+              <stop stop-color="#9be8ff" stop-opacity="0.85" />
+              <stop offset="1" stop-color="#2af0d3" stop-opacity="0.45" />
+            </linearGradient>
+          </defs>
+          <path d="M80 170 H310 V250 H520 V190 H760 V270 H1040" fill="none" stroke="url(#circuit)" stroke-width="2.4" />
+          <path d="M150 640 H420 V550 H640 V610 H1080" fill="none" stroke="url(#circuit)" stroke-width="2.4" />
+          <path d="M960 90 V250 H1100 V500 H980 V770" fill="none" stroke="url(#circuit)" stroke-width="2.4" />
+          <path d="M260 780 V690 H160 V440 H310 V330" fill="none" stroke="url(#circuit)" stroke-width="2.4" />
+          <g fill="#2af0d3">
+            <circle cx="310" cy="170" r="7" />
+            <circle cx="520" cy="250" r="7" />
+            <circle cx="760" cy="190" r="7" />
+            <circle cx="420" cy="640" r="7" />
+            <circle cx="640" cy="550" r="7" />
+            <circle cx="980" cy="610" r="7" />
+            <circle cx="960" cy="250" r="7" />
+            <circle cx="1100" cy="500" r="7" />
+          </g>
+        </svg>
+        <div class="group-mark" aria-hidden="true">27</div>
+        <div class="cover-content">
+          <div>
+            <div class="school-chip"><span class="node-dot"></span>BS 14 ITECH | Klasse IT5D</div>
+            <div class="cover-title">
+              <div class="eyebrow">Kompetenzentwicklung und Reflexion</div>
+              <h1>Portfolio – Lernfeld 3: Netzwerktechnik</h1>
+              <p class="cover-subtitle">
+                Dokumentation meines Lernprozesses zu OSI-Modell, DNS, VLANs, Routing,
+                Cisco Packet Tracer und systematischer Netzwerkarbeit.
+              </p>
+            </div>
+          </div>
+          <div class="cover-meta">
+            <div class="meta-card"><span>Name</span><strong>Kerem Y. Uzun</strong></div>
+            <div class="meta-card"><span>Klasse</span><strong>IT5D</strong></div>
+            <div class="meta-card"><span>Gruppe</span><strong>27</strong></div>
+            <div class="meta-card"><span>Schule</span><strong>BS 14 ITECH</strong></div>
+            <div class="meta-card"><span>Abgabe</span><strong>29.04.2026</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="toc">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Übersicht</div>
+            <h2>Inhaltsverzeichnis</h2>
+          </div>
+        </div>
+        <div class="toc-grid">
+          <a class="toc-item" href="#einleitung">Einleitung</a>
+          <a class="toc-item" href="#ausgangssituation">Ausgangssituation und Ziel des Kompetenzbogens</a>
+          <a class="toc-item" href="#kompetenzen">Ausgewählte Kompetenzen</a>
+          <a class="toc-item" href="#fachlich">Fachliche Kompetenzentwicklung</a>
+          <a class="toc-item" href="#ueberfachlich">Überfachliche Kompetenzentwicklung</a>
+          <a class="toc-item" href="#lernfortschritt">Dokumentierter Lernfortschritt</a>
+          <a class="toc-item" href="#grafiken">Grafische Auswertung meiner Entwicklung</a>
+          <a class="toc-item" href="#reflexion">Reflexion des Lernprozesses</a>
+          <a class="toc-item" href="#teamarbeit">Teamarbeit in Gruppe 27</a>
+          <a class="toc-item" href="#note">Begründeter Notenvorschlag</a>
+          <a class="toc-item" href="#fazit">Fazit</a>
+          <a class="toc-item" href="#anhang">Anhang / Mini-Glossar</a>
+        </div>
+      </section>
+
+      <section class="section" id="einleitung">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 1</div>
+            <h2>Einleitung</h2>
+          </div>
+        </div>
+        <p class="lead">
+          In diesem Portfolio dokumentiere ich meinen Lernprozess im Lernfeld 3
+          „Netzwerktechnik“. Der Schwerpunkt liegt auf meiner Kompetenzentwicklung:
+          Ich beschreibe, welche fachlichen Inhalte ich erarbeitet habe, wie ich bei
+          Aufgaben vorgegangen bin und wie ich meinen eigenen Lernfortschritt einschätze.
+        </p>
+        <div class="grid-3" style="margin-top: 22px">
+          <div class="info-card">
+            <div class="icon-title">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 7h16M4 12h16M4 17h16" />
+                  <path d="M8 7v10M16 7v10" />
+                </svg>
+              </span>
+              <h3>Fokus</h3>
+            </div>
+            <p>
+              Zentral waren für mich das OSI-Modell mit Kapselung und Dekapselung
+              sowie DNS-Grundlagen und die Funktion der Namensauflösung.
+            </p>
+          </div>
+          <div class="info-card">
+            <div class="icon-title">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19V5" />
+                  <path d="M4 19h16" />
+                  <path d="m8 15 3-3 3 2 5-7" />
+                </svg>
+              </span>
+              <h3>Entwicklung</h3>
+            </div>
+            <p>
+              Ich bin in den ausgewählten Kompetenzen auf Basic-Niveau gestartet
+              und habe vor allem mein Grundlagenverständnis und meine Sicherheit
+              beim Erklären verbessert.
+            </p>
+          </div>
+          <div class="info-card">
+            <div class="icon-title">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+                  <path d="M18 21a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+                  <path d="M10.5 8.5 15.5 15.5" />
+                </svg>
+              </span>
+              <h3>Reflexion</h3>
+            </div>
+            <p>
+              Neben dem fachlichen Lernen bewerte ich auch mein methodisches
+              Vorgehen, meine Kommunikation und die Zusammenarbeit in Gruppe 27.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="ausgangssituation">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 2</div>
+            <h2>Ausgangssituation und Ziel des Kompetenzbogens</h2>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <p>
+              Zu Beginn des Lernfeldes habe ich meine fachlichen und überfachlichen
+              Kompetenzen bewusst eingeschätzt. Der Kompetenzbogen sollte mir helfen,
+              meinen Lernprozess nicht nur am Ende zu betrachten, sondern während des
+              Lernfeldes konkrete Fortschritte festzuhalten. Dadurch konnte ich besser
+              erkennen, welche Themen ich bereits erklären kann und wo ich noch mehr
+              Übung brauche.
+            </p>
+            <p style="margin-top: 14px">
+              In der Auswahl-Tabelle des Kompetenzbogens standen teilweise Emojis in
+              einer Spalte, die eigentlich für die ausgewählte Kompetenz gedacht war.
+              Inhaltlich interpretiere ich die Auswahl deshalb fachlich korrekt:
+              Gewählt wurden das OSI-Modell mit Schwerpunkt Kapselung, DNS-Grundlagen
+              und Einrichtung sowie die überfachlichen Kompetenzen
+              systematisch-methodisches Vorgehen und Kommunikationsfähigkeit.
+            </p>
+          </div>
+          <div class="highlight">
+            <strong>Ausgangsniveau:</strong>
+            In allen vier ausgewählten Kompetenzen bin ich mit Basic gestartet.
+            Das bedeutet: Ich kann Grundlagen benennen und erklären. Mein Ziel war,
+            diese Grundlagen sicherer zu verstehen und bei typischen Aufgaben
+            strukturierter anzuwenden.
+          </div>
+        </div>
+        <div class="level-strip">
+          <div class="level-card">
+            <strong><span class="badge badge-basic">BASIC</span></strong>
+            Ich kenne die Grundlagen und kann das Thema erklären.
+          </div>
+          <div class="level-card">
+            <strong><span class="badge badge-pro">PRO</span></strong>
+            Ich kann das Thema anwenden und typische Aufgaben lösen.
+          </div>
+          <div class="level-card">
+            <strong><span class="badge badge-expert">EXPERT</span></strong>
+            Ich beherrsche das Thema sicher und kann es in neuen Situationen einsetzen.
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="kompetenzen">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 3</div>
+            <h2>Ausgewählte Kompetenzen</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Bereich</th>
+                <th>Kompetenz</th>
+                <th>Startniveau</th>
+                <th>Einordnung im Lernfeld</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fachlich 1</td>
+                <td><strong>OSI-Modell: Kapselung</strong></td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+                <td>Datenkapselung, Header, Schichtenmodell und Datenweg verstehen.</td>
+              </tr>
+              <tr>
+                <td>Fachlich 2</td>
+                <td><strong>DNS: Grundlagen & Einrichtung</strong></td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+                <td>Namensauflösung, DNS-Server und wichtige Record-Typen einordnen.</td>
+              </tr>
+              <tr>
+                <td>Überfachlich 1</td>
+                <td><strong>Systematisch-methodisches Vorgehen</strong></td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+                <td>Arbeitsaufträge in Schritte zerlegen, Ergebnisse prüfen und dokumentieren.</td>
+              </tr>
+              <tr>
+                <td>Überfachlich 2</td>
+                <td><strong>Kommunikationsfähigkeit</strong></td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+                <td>Technische Sachverhalte im Team und gegenüber der Lehrkraft verständlich erklären.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section page-break" id="entwicklung">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 4 und 5</div>
+            <h2>Kompetenzentwicklung</h2>
+          </div>
+        </div>
+        <div class="grid-2">
+          <article id="fachlich" class="info-card">
+            <div class="icon-title">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="4" y="4" width="16" height="6" rx="1.5" />
+                  <rect x="4" y="14" width="16" height="6" rx="1.5" />
+                  <path d="M8 10v4M16 10v4" />
+                </svg>
+              </span>
+              <h3>Fachliche Kompetenzentwicklung</h3>
+            </div>
+            <p>
+              Fachlich habe ich im Lernfeld 3 vor allem die Grundlagen der
+              Netzwerktechnik aufgebaut. Beim OSI-Modell habe ich die sieben
+              Schichten in ihrer Reihenfolge gelernt und verstanden, dass
+              Kapselung bedeutet, dass Daten beim Senden schrittweise mit
+              zusätzlichen Steuerinformationen wie Headern versehen werden.
+              Beim Empfänger läuft dieser Vorgang als Dekapselung wieder zurück.
+            </p>
+            <p style="margin-top: 12px">
+              Außerdem habe ich mich mit der Frage beschäftigt, was ein
+              Computernetzwerk grundsätzlich ist: mehrere Systeme, die über
+              Übertragungsmedien und Protokolle Daten austauschen. Darauf aufbauend
+              habe ich VLANs und Broadcast-Traffic kennengelernt. Für mich wurde
+              klarer, dass VLANs Netzbereiche logisch trennen und dadurch
+              Broadcast-Domänen strukturieren können.
+            </p>
+            <p style="margin-top: 12px">
+              Weitere Schwerpunkte waren IPv4, Subnetting und Supernetting,
+              Routing mit dem Konzept „InterVLAN Router on a Stick“ sowie ein
+              praktischer Workshop zur Cisco-Switch-Konfiguration im Cisco Packet
+              Tracer. Bei DNS habe ich verstanden, dass DNS Namen wie Domains in
+              IP-Adressen auflöst und damit eine zentrale Grundlage für die
+              Kommunikation in Netzwerken und im Internet bildet.
+            </p>
+          </article>
+
+          <article id="ueberfachlich" class="info-card">
+            <div class="icon-title">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 7h8M8 12h8M8 17h5" />
+                  <rect x="4" y="3" width="16" height="18" rx="2" />
+                </svg>
+              </span>
+              <h3>Überfachliche Kompetenzentwicklung</h3>
+            </div>
+            <p>
+              Überfachlich habe ich vor allem daran gearbeitet, strukturierter
+              vorzugehen. Ich habe Arbeitsaufträge in kleinere Schritte zerlegt,
+              Fachbegriffe nachgeschlagen, Ergebnisse visualisiert und schwierige
+              Punkte gezielt erneut betrachtet. Besonders beim OSI-Modell und bei
+              VLANs war dieses Vorgehen hilfreich, weil die Abläufe am Anfang
+              abstrakt wirkten.
+            </p>
+            <p style="margin-top: 12px">
+              Bei der Kommunikationsfähigkeit habe ich geübt, technische Inhalte
+              verständlich zu formulieren. Im Team war es wichtig, Fragen offen
+              anzusprechen, eigene Ideen einzubringen und Rückmeldungen anzunehmen.
+              Auch meine Selbstorganisation, Problemlösung und Reflexion spielten
+              eine Rolle: Ich habe meinen Fortschritt dokumentiert, Schwierigkeiten
+              benannt und daraus nächste Schritte abgeleitet.
+            </p>
+            <div class="feature-list">
+              <div class="feature-row"><span class="feature-dot"></span><p><strong>Systematik:</strong> vom Arbeitsauftrag zu klaren Teilschritten.</p></div>
+              <div class="feature-row"><span class="feature-dot"></span><p><strong>Kommunikation:</strong> Fachbegriffe verständlich und passend einsetzen.</p></div>
+              <div class="feature-row"><span class="feature-dot"></span><p><strong>Problemlösung:</strong> bei Verständnisproblemen recherchieren, visualisieren und nachfragen.</p></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="lernfortschritt">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 6</div>
+            <h2>Meine LF3-Lernreise</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Datum</th>
+                <th>Bearbeitete Kompetenz</th>
+                <th>Gelernt / erreicht</th>
+                <th>Aktuelles Niveau</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>13.04.2026</td>
+                <td>OSI-Modell</td>
+                <td>Aufbau und Reihenfolge des OSI-Schichtenmodells</td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+              </tr>
+              <tr>
+                <td>13.04.2026</td>
+                <td>Netzwerk Grundlagen</td>
+                <td>Was ist ein Computernetzwerk überhaupt?</td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+              </tr>
+              <tr>
+                <td>16.04.2026</td>
+                <td>VLANs und Broadcast</td>
+                <td>Grundlagen zu VLANs und deren Auswirkung auf Broadcast-Traffic</td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+              </tr>
+              <tr>
+                <td>20.04.2026</td>
+                <td>IPv4, Subnetting & Wirtschaft</td>
+                <td>Workshop zu IPv4, Subnetting und Supernetting absolviert. Außerdem wirtschaftliche Grundlagen in der Übung „Kauf vs. Leasing“ bearbeitet.</td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+              </tr>
+              <tr>
+                <td>22.04.2026</td>
+                <td>Routing</td>
+                <td>Das Konzept „InterVLAN Router on a Stick“ kennengelernt.</td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+              </tr>
+              <tr>
+                <td>27.04.2026</td>
+                <td>Cisco Switch Konfiguration</td>
+                <td>Workshop zur praktischen Einrichtung auf einem Cisco Switch mithilfe des Cisco Packet Tracers durchgeführt.</td>
+                <td><span class="badge badge-basic">BASIC</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="timeline" aria-label="Animierte Lernfortschritt-Timeline">
+          <div class="timeline-step" style="--i: 1">
+            <div class="timeline-date">13.04.2026</div>
+            <div><strong>OSI-Modell</strong><p>Ich habe die Reihenfolge der sieben Schichten gelernt und die Grundlage für das Thema Kapselung gelegt.</p></div>
+          </div>
+          <div class="timeline-step" style="--i: 2">
+            <div class="timeline-date">13.04.2026</div>
+            <div><strong>Netzwerk-Grundlagen</strong><p>Ich habe geklärt, was ein Computernetzwerk ausmacht und warum Protokolle für Kommunikation wichtig sind.</p></div>
+          </div>
+          <div class="timeline-step" style="--i: 3">
+            <div class="timeline-date">16.04.2026</div>
+            <div><strong>VLANs und Broadcast</strong><p>Ich habe verstanden, dass VLANs logische Netzbereiche bilden und Broadcast-Traffic eingrenzen können.</p></div>
+          </div>
+          <div class="timeline-step" style="--i: 4">
+            <div class="timeline-date">20.04.2026</div>
+            <div><strong>IPv4, Subnetting & Wirtschaft</strong><p>Ich habe einen Workshop zu IPv4, Subnetting und Supernetting absolviert und zusätzlich „Kauf vs. Leasing“ bearbeitet.</p></div>
+          </div>
+          <div class="timeline-step" style="--i: 5">
+            <div class="timeline-date">22.04.2026</div>
+            <div><strong>Routing</strong><p>Ich habe das Prinzip „InterVLAN Router on a Stick“ kennengelernt und in den Zusammenhang von VLANs und Routing eingeordnet.</p></div>
+          </div>
+          <div class="timeline-step" style="--i: 6">
+            <div class="timeline-date">27.04.2026</div>
+            <div><strong>Cisco Switch Konfiguration</strong><p>Ich habe im Cisco Packet Tracer praktische Schritte zur Switch-Konfiguration durchgeführt.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section page-break" id="grafiken">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 7</div>
+            <h2>Grafische Auswertung meiner Entwicklung</h2>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-panel">
+            <div class="chart-title">
+              <h3>Kompetenz-Radar</h3>
+              <span class="badge badge-cyan">Selbsteinschätzung</span>
+            </div>
+            <div class="radar-wrap">
+              <svg viewBox="0 0 420 340" role="img" aria-label="Skill-Radar mit fachlichen und überfachlichen Kompetenzen">
+                <defs>
+                  <radialGradient id="radarFill" cx="50%" cy="50%" r="60%">
+                    <stop stop-color="#00c8ff" stop-opacity="0.35" />
+                    <stop offset="1" stop-color="#2af0d3" stop-opacity="0.08" />
+                  </radialGradient>
+                </defs>
+                <g transform="translate(210 170)">
+                  <polygon points="0,-120 84.9,-84.9 120,0 84.9,84.9 0,120 -84.9,84.9 -120,0 -84.9,-84.9" fill="none" stroke="#d7eef6" stroke-width="1" />
+                  <polygon points="0,-80 56.6,-56.6 80,0 56.6,56.6 0,80 -56.6,56.6 -80,0 -56.6,-56.6" fill="none" stroke="#d7eef6" stroke-width="1" />
+                  <polygon points="0,-40 28.3,-28.3 40,0 28.3,28.3 0,40 -28.3,28.3 -40,0 -28.3,-28.3" fill="none" stroke="#d7eef6" stroke-width="1" />
+                  <line x1="0" y1="0" x2="0" y2="-128" stroke="#d7eef6" />
+                  <line x1="0" y1="0" x2="91" y2="-91" stroke="#d7eef6" />
+                  <line x1="0" y1="0" x2="128" y2="0" stroke="#d7eef6" />
+                  <line x1="0" y1="0" x2="91" y2="91" stroke="#d7eef6" />
+                  <line x1="0" y1="0" x2="0" y2="128" stroke="#d7eef6" />
+                  <line x1="0" y1="0" x2="-91" y2="91" stroke="#d7eef6" />
+                  <line x1="0" y1="0" x2="-128" y2="0" stroke="#d7eef6" />
+                  <line x1="0" y1="0" x2="-91" y2="-91" stroke="#d7eef6" />
+                  <polygon points="0,-48 37.7,-37.7 48,0 56.6,56.6 0,120 -56.6,56.6 -80,0 -28.3,-28.3" fill="url(#radarFill)" stroke="#00aee6" stroke-width="3" />
+                  <g fill="#00aee6">
+                    <circle cx="0" cy="-48" r="5" />
+                    <circle cx="37.7" cy="-37.7" r="5" />
+                    <circle cx="48" cy="0" r="5" />
+                    <circle cx="56.6" cy="56.6" r="5" />
+                    <circle cx="0" cy="120" r="5" />
+                    <circle cx="-56.6" cy="56.6" r="5" />
+                    <circle cx="-80" cy="0" r="5" />
+                    <circle cx="-28.3" cy="-28.3" r="5" />
+                  </g>
+                  <text class="radar-label" x="0" y="-143" text-anchor="middle">OSI-Kapselung</text>
+                  <text class="radar-label" x="116" y="-98" text-anchor="middle">DNS</text>
+                  <text class="radar-label" x="158" y="5" text-anchor="middle">VLAN</text>
+                  <text class="radar-label" x="118" y="106" text-anchor="middle">Problemlösung</text>
+                  <text class="radar-label" x="0" y="146" text-anchor="middle">Reflexion</text>
+                  <text class="radar-label" x="-118" y="106" text-anchor="middle">Selbstorg.</text>
+                  <text class="radar-label" x="-158" y="5" text-anchor="middle">Teamarbeit</text>
+                  <text class="radar-label" x="-112" y="-98" text-anchor="middle">Kommunikation</text>
+                </g>
+              </svg>
+            </div>
+            <p class="small">
+              Skala: 1 = Basic, 2 = Pro, 3 = Expert. Bei den ausgewählten Fachkompetenzen
+              bleibt die Selbsteinschätzung bei Basic, aber das Verständnis ist gefestigter.
+            </p>
+          </div>
+
+          <div class="chart-panel">
+            <div class="chart-title">
+              <h3>Startniveau und aktueller Lernstand</h3>
+              <span class="badge badge-cyan">Basic gefestigt</span>
+            </div>
+            <div class="bar-stack">
+              <div class="bar-row">
+                <div class="bar-label"><span>OSI-Modell: Kapselung</span><span>BASIC</span></div>
+                <div class="bar-track" style="--start: 33%; --current: 45%"><span class="bar-start"></span><span class="bar-current"></span></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>DNS: Grundlagen & Einrichtung</span><span>BASIC</span></div>
+                <div class="bar-track" style="--start: 33%; --current: 43%"><span class="bar-start"></span><span class="bar-current"></span></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Systematisch-methodisches Vorgehen</span><span>BASIC</span></div>
+                <div class="bar-track" style="--start: 33%; --current: 48%"><span class="bar-start"></span><span class="bar-current"></span></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Kommunikationsfähigkeit</span><span>BASIC</span></div>
+                <div class="bar-track" style="--start: 33%; --current: 46%"><span class="bar-start"></span><span class="bar-current"></span></div>
+              </div>
+            </div>
+            <div class="bar-legend" style="margin-top: 14px">
+              <span><span class="legend-swatch" style="background: rgba(8, 121, 167, 0.22)"></span>Startniveau</span>
+              <span><span class="legend-swatch" style="background: linear-gradient(90deg, var(--accent), var(--turquoise))"></span>aktueller Lernstand innerhalb Basic</span>
+            </div>
+            <p class="small" style="margin-top: 12px">
+              Die Balken zeigen keinen Sprung in eine neue Niveaustufe, sondern meine
+              stärkere Sicherheit innerhalb der Basic-Stufe.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 16px">
+          <div class="chart-panel">
+            <div class="chart-title">
+              <h3>OSI-Modell und Kapselung</h3>
+              <span class="badge badge-cyan">7 Schichten</span>
+            </div>
+            <div class="osi-grid">
+              <div class="osi-layer"><span class="osi-number">7</span><strong>Anwendung</strong><span class="pdu">Daten</span></div>
+              <div class="osi-layer"><span class="osi-number">6</span><strong>Darstellung</strong><span class="pdu">Daten</span></div>
+              <div class="osi-layer"><span class="osi-number">5</span><strong>Sitzung</strong><span class="pdu">Daten</span></div>
+              <div class="osi-layer"><span class="osi-number">4</span><strong>Transport</strong><span class="pdu">Segment</span></div>
+              <div class="osi-layer"><span class="osi-number">3</span><strong>Vermittlung / Netzwerk</strong><span class="pdu">Paket</span></div>
+              <div class="osi-layer"><span class="osi-number">2</span><strong>Sicherung</strong><span class="pdu">Frame</span></div>
+              <div class="osi-layer"><span class="osi-number">1</span><strong>Bitübertragung</strong><span class="pdu">Bits</span></div>
+            </div>
+            <div class="encapsulation">
+              <span class="data-pulse" aria-hidden="true"></span>
+              <strong>Kapselung:</strong> Beim Senden wandern Daten von Schicht 7 nach
+              Schicht 1. Jede relevante Schicht ergänzt Steuerinformationen, z. B.
+              TCP/UDP-Header, IP-Header oder Ethernet-Header. Beim Empfänger werden
+              diese Informationen in umgekehrter Reihenfolge wieder ausgewertet.
+            </div>
+          </div>
+
+          <div class="chart-panel topology">
+            <div class="chart-title">
+              <h3>Netzwerk-Topologie</h3>
+              <span class="badge badge-cyan">VLAN / DNS / DHCP</span>
+            </div>
+            <svg viewBox="0 0 640 420" role="img" aria-label="Netzwerk-Topologie mit Router, Switch, VLANs, Clients und DNS DHCP Server">
+              <defs>
+                <linearGradient id="nodeGradient" x1="0" x2="1">
+                  <stop stop-color="#d7f7ff" />
+                  <stop offset="1" stop-color="#ffffff" />
+                </linearGradient>
+                <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#061321" flood-opacity="0.12" />
+                </filter>
+              </defs>
+              <g stroke="#7ccfe4" stroke-width="3" fill="none">
+                <path d="M320 98 V175" />
+                <path d="M320 244 H148 V304" />
+                <path d="M320 244 H492 V304" />
+                <path d="M320 244 V320" />
+                <path d="M420 210 H530 V142" stroke-dasharray="8 7" />
+              </g>
+              <g filter="url(#softShadow)">
+                <rect x="246" y="40" width="148" height="58" rx="14" fill="url(#nodeGradient)" stroke="#00aee6" />
+                <text x="320" y="65" text-anchor="middle" font-weight="800" fill="#061321">Router</text>
+                <text x="320" y="84" text-anchor="middle" font-size="12" fill="#526578">InterVLAN</text>
+
+                <rect x="238" y="174" width="164" height="70" rx="14" fill="#061321" stroke="#00c8ff" />
+                <text x="320" y="202" text-anchor="middle" font-weight="800" fill="#ffffff">Cisco Switch</text>
+                <text x="320" y="222" text-anchor="middle" font-size="12" fill="#9be8ff">802.1Q / Trunk</text>
+
+                <rect x="70" y="304" width="156" height="66" rx="14" fill="url(#nodeGradient)" stroke="#2af0d3" />
+                <text x="148" y="332" text-anchor="middle" font-weight="800" fill="#061321">Clients VLAN 10</text>
+                <text x="148" y="352" text-anchor="middle" font-size="12" fill="#526578">Arbeitsplätze</text>
+
+                <rect x="414" y="304" width="156" height="66" rx="14" fill="url(#nodeGradient)" stroke="#2af0d3" />
+                <text x="492" y="332" text-anchor="middle" font-weight="800" fill="#061321">Clients VLAN 20</text>
+                <text x="492" y="352" text-anchor="middle" font-size="12" fill="#526578">getrennte Domäne</text>
+
+                <rect x="242" y="320" width="156" height="66" rx="14" fill="url(#nodeGradient)" stroke="#00aee6" />
+                <text x="320" y="348" text-anchor="middle" font-weight="800" fill="#061321">DNS / DHCP</text>
+                <text x="320" y="368" text-anchor="middle" font-size="12" fill="#526578">Name + IP-Vergabe</text>
+
+                <rect x="458" y="84" width="144" height="58" rx="14" fill="url(#nodeGradient)" stroke="#00aee6" />
+                <text x="530" y="109" text-anchor="middle" font-weight="800" fill="#061321">Internet</text>
+                <text x="530" y="128" text-anchor="middle" font-size="12" fill="#526578">öffentliche DNS</text>
+              </g>
+            </svg>
+            <p class="small">
+              Die Grafik zeigt vereinfacht, wie Switch, Router, VLANs und DNS/DHCP
+              zusammenhängen. Sie ist ein Lernbild, keine vollständige Netzplanung.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reflexion">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 8</div>
+            <h2>Reflexion des Lernprozesses</h2>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="quote-box">
+            <h3>Zielerreichung</h3>
+            <p>
+              Meine zu Beginn gewählten Kompetenzen habe ich auf dem angestrebten
+              Grundlagen-Niveau erreicht und gefestigt. Ich bin beim OSI-Modell mit
+              Kapselung, bei DNS-Grundlagen sowie bei systematisch-methodischem
+              Vorgehen und Kommunikationsfähigkeit jeweils mit Basic gestartet.
+              Im Verlauf des Lernfeldes habe ich konkret gelernt, wie das
+              OSI-Schichtenmodell aufgebaut ist, wie Daten beim Senden gekapselt
+              werden und welche Rolle DNS bei der Namensauflösung übernimmt.
+            </p>
+            <p style="margin-top: 12px">
+              Voll erreicht habe ich vor allem das Ziel, die Grundlagen sicherer zu
+              erklären. Teilweise erreicht ist für mich die praktische Anwendung:
+              Bei Cisco Packet Tracer und DNS-Konfiguration habe ich erste praktische
+              Bezüge hergestellt, brauche aber für die Pro-Stufe noch mehr Übung an
+              konkreten Konfigurationsaufgaben.
+            </p>
+          </div>
+          <div class="quote-box">
+            <h3>Lernprozess</h3>
+            <p>
+              Ich habe strukturiert gearbeitet und meine Fortschritte kontinuierlich
+              dokumentiert. Die theoretische Einarbeitung hat gut funktioniert,
+              besonders wenn ich Inhalte in Schaubilder oder kurze Stichpunkte
+              übertragen habe. Herausforderungen gab es anfangs beim tieferen
+              Verständnis der OSI-Kapselung und bei der Frage, wie VLANs
+              Broadcast-Traffic logisch voneinander trennen.
+            </p>
+            <p style="margin-top: 12px">
+              Diese Schwierigkeiten habe ich bearbeitet, indem ich die Abläufe
+              visualisiert, gezielt recherchiert und im Team Rückfragen gestellt habe.
+              Beim nächsten Mal würde ich noch früher den Austausch suchen, wenn ein
+              Thema sehr abstrakt wird. Dadurch könnte ich Verständnisprobleme
+              schneller eingrenzen.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top: 16px">
+          <div class="aha-card">
+            <strong>Aha-Moment: OSI-Modell</strong>
+            <p>
+              Das OSI-Modell wurde verständlicher, als ich es nicht nur als Liste von
+              Schichten gesehen habe, sondern als Weg, den Daten mit zusätzlichen
+              Headern durchlaufen.
+            </p>
+          </div>
+          <div class="aha-card">
+            <strong>Aha-Moment: VLAN & Broadcast</strong>
+            <p>
+              VLANs sind keine neuen Kabel, sondern logische Trennungen. Dadurch
+              können Broadcasts auf einen bestimmten Bereich begrenzt werden.
+            </p>
+          </div>
+          <div class="aha-card">
+            <strong>Aha-Moment: InterVLAN Routing</strong>
+            <p>
+              „Router on a Stick“ hat mir gezeigt, warum VLANs für sich getrennt sind
+              und warum Routing nötig ist, wenn sie miteinander kommunizieren sollen.
+            </p>
+          </div>
+        </div>
+
+        <article class="trouble-card" style="margin-top: 16px">
+          <div class="trouble-head">
+            <h3 style="color: white">Troubleshooting-Karte: Schwierigkeit → Vorgehen → Lösung</h3>
+          </div>
+          <div class="trouble-grid">
+            <div class="trouble-step">
+              <span>Problem</span>
+              <p>
+                Die OSI-Kapselung und die Abgrenzung von VLANs beim Broadcast-Traffic
+                waren zuerst abstrakt und schwer direkt vorstellbar.
+              </p>
+            </div>
+            <div class="trouble-step">
+              <span>Vorgehen</span>
+              <p>
+                Ich habe die Prozesse visualisiert, Begriffe nachgeschlagen und die
+                Schritte im Team besprochen, statt nur Definitionen auswendig zu lernen.
+              </p>
+            </div>
+            <div class="trouble-step">
+              <span>Lösung</span>
+              <p>
+                Durch die Kombination aus Schaubild, Recherche und Austausch konnte
+                ich die Zusammenhänge klarer erklären und in den Lernfortschritt aufnehmen.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="teamarbeit">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 9</div>
+            <h2>Teamarbeit in Gruppe 27</h2>
+          </div>
+        </div>
+        <p class="lead">
+          Die Zusammenarbeit in Gruppe 27 mit Leandro, Arif, Falk und mir war
+          zuverlässig und fachlich hilfreich. Wir haben Aufgaben verteilt, Absprachen
+          eingehalten und offene Fragen gemeinsam geklärt.
+        </p>
+        <div class="team-map" style="margin-top: 20px">
+          <div class="team-core">
+            <h3 style="color: white">Kompetenz-Map Gruppe 27</h3>
+            <p style="margin-top: 10px; color: #d7f7ff">
+              Unser Team hat besonders gut funktioniert, wenn wir technische Themen
+              aufgeteilt und anschließend gegenseitig erklärt haben. Mein eigener
+              Beitrag lag darin, mich aktiv in Diskussionen einzubringen, Aufgaben
+              gewissenhaft zu bearbeiten und bei Verständnisfragen nachzuhaken.
+            </p>
+          </div>
+          <div class="team-member">
+            <strong>Kerem</strong>
+            <p class="small">aktive Mitarbeit, Dokumentation, Rückfragen und eigene Beiträge</p>
+          </div>
+          <div class="team-member">
+            <strong>Leandro</strong>
+            <p class="small">engagierte Mitarbeit und hilfreiche fachliche Unterstützung</p>
+          </div>
+          <div class="team-member">
+            <strong>Arif</strong>
+            <p class="small">zuverlässige Mitarbeit und konstruktive Ideen</p>
+          </div>
+          <div class="team-member">
+            <strong>Falk</strong>
+            <p class="small">kontinuierliche Beteiligung und Unterstützung im Arbeitsprozess</p>
+          </div>
+        </div>
+        <div class="highlight" style="margin-top: 18px">
+          Verbesserungsbedarf sehe ich vor allem darin, bei schwierigen Themen noch
+          früher aktiv Rückfragen im Team zu stellen. Das würde helfen, abstrakte
+          Themen wie Kapselung oder VLAN-Kommunikation schneller zu klären.
+        </div>
+      </section>
+
+      <section class="section" id="note">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 10</div>
+            <h2>Begründeter Notenvorschlag</h2>
+          </div>
+          <span class="badge badge-cyan">Mein Vorschlag: Note 1</span>
+        </div>
+        <p>
+          Für meine Leistung in diesem Lernfeld schlage ich die Note 1 vor. Meine
+          Begründung ist nicht, dass ich mich in allen fachlichen Themen bereits als
+          Expert einschätze. Fachlich befinde ich mich bei den ausgewählten Themen
+          weiterhin auf Basic-Niveau, habe dieses Niveau aber nachvollziehbar
+          aufgebaut und gefestigt.
+        </p>
+        <p style="margin-top: 12px">
+          Besonders engagiert habe ich mich bei der Einarbeitung in das OSI-Modell,
+          die Datenkapselung, DNS-Grundlagen, VLANs und Broadcast-Traffic. Wenn ein
+          Thema schwierig wurde, habe ich nicht nur abgewartet, sondern visualisiert,
+          recherchiert und Rückfragen genutzt. Auch die praktischen Bezüge im Cisco
+          Packet Tracer und das Konzept „InterVLAN Router on a Stick“ haben meinen
+          Lernfortschritt unterstützt.
+        </p>
+        <p style="margin-top: 12px">
+          Überfachlich habe ich strukturiert gearbeitet, meine Fortschritte
+          dokumentiert und mich in Gruppe 27 zuverlässig eingebracht. In der
+          Zusammenarbeit mit Leandro, Arif und Falk habe ich Aufgaben übernommen,
+          mich an Absprachen gehalten und technische Fragen aktiv mitbesprochen.
+          Aus meiner Sicht rechtfertigen der kontinuierliche Einsatz, die saubere
+          Reflexion und der dokumentierte Lernfortschritt den Notenvorschlag 1.
+        </p>
+        <div class="signature">
+          <div class="signature-line">Unterschrift: K. Uzun</div>
+          <div class="signature-line">Datum: 29.04.2026</div>
+        </div>
+      </section>
+
+      <section class="section" id="fazit">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 11</div>
+            <h2>Fazit</h2>
+          </div>
+        </div>
+        <p class="lead">
+          Im Lernfeld 3 habe ich wichtige Grundlagen der Netzwerktechnik aufgebaut.
+          Besonders das OSI-Modell, VLANs, Netzwerkgrundlagen, Routing und
+          Switch-Konfiguration haben meinen fachlichen Fortschritt geprägt.
+        </p>
+        <p style="margin-top: 14px">
+          Gleichzeitig habe ich gelernt, strukturierter zu arbeiten, technische
+          Probleme systematischer einzugrenzen und mich besser im Team abzustimmen.
+          Für die nächsten Schritte möchte ich vor allem mehr praktische Routine in
+          Konfigurationen gewinnen, zum Beispiel bei DNS, VLANs, Routing und
+          Switch-Konfigurationen im Cisco Packet Tracer. Damit kann ich mich von
+          einem sicheren Basic-Niveau Schritt für Schritt in Richtung Pro entwickeln.
+        </p>
+      </section>
+
+      <section class="section page-break" id="anhang">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Kapitel 12</div>
+            <h2>Anhang / Mini-Glossar</h2>
+          </div>
+        </div>
+
+        <div class="glossary-grid">
+          <div class="glossary-card"><strong>OSI-Modell</strong><p>Referenzmodell mit sieben Schichten, das Netzwerkkommunikation strukturiert beschreibt.</p></div>
+          <div class="glossary-card"><strong>Kapselung</strong><p>Prozess, bei dem Daten beim Senden schrittweise mit Headern und Steuerinformationen ergänzt werden.</p></div>
+          <div class="glossary-card"><strong>DNS</strong><p>Domain Name System; löst Namen wie Domains in IP-Adressen auf.</p></div>
+          <div class="glossary-card"><strong>VLAN</strong><p>Virtual LAN; logische Trennung eines Netzwerks in separate Bereiche.</p></div>
+          <div class="glossary-card"><strong>Broadcast</strong><p>Nachricht an alle Geräte innerhalb einer Broadcast-Domäne.</p></div>
+          <div class="glossary-card"><strong>Subnetting</strong><p>Aufteilung eines IP-Netzes in kleinere Teilnetze.</p></div>
+          <div class="glossary-card"><strong>Routing</strong><p>Weiterleitung von Paketen zwischen verschiedenen Netzwerken.</p></div>
+          <div class="glossary-card"><strong>Cisco Packet Tracer</strong><p>Simulationsumgebung, mit der Netzwerke geplant, konfiguriert und getestet werden können.</p></div>
+          <div class="glossary-card"><strong>DHCP</strong><p>Dienst zur automatischen Vergabe von IP-Adressen und weiteren Netzwerkinformationen.</p></div>
+          <div class="glossary-card"><strong>Switch</strong><p>Netzwerkgerät auf OSI-Schicht 2, das Frames anhand von MAC-Adressen weiterleitet.</p></div>
+        </div>
+      </section>
+
+      <section class="section page-break" id="kompetenzmatrix">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Anhang</div>
+            <h2>Vollständige Kompetenzmatrix aus dem Kompetenzbogen</h2>
+          </div>
+        </div>
+        <p class="lead">
+          Die folgende Matrix fasst die fachlichen und überfachlichen Kompetenzen aus
+          dem Kompetenzbogen zusammen. Sie zeigt jeweils die Beschreibungen für Basic,
+          Pro und Expert sowie mein aktuelles Niveau aus dem Kompetenzbogen.
+        </p>
+
+        <h3 style="margin: 24px 0 12px">Fachliche Kompetenzen</h3>
+        <div class="appendix-grid">
+          <article class="competency-card">
+            <div class="competency-head"><h3>1. IPv4-Grundlagen</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was eine IPv4-Adresse ist, aus wie vielen Bits sie besteht und aus welchen zwei Teilen sie aufgebaut ist: Netzteil und Hostteil.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann private und öffentliche IPv4-Adressen unterscheiden und CIDR-Notation korrekt anwenden.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein vollständiges IP-Adressierungskonzept für ein Unternehmensnetzwerk entwerfen und alle Designentscheidungen begründen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>2. Subnetzmaske & Subnetting</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kenne den Begriff Subnetzmaske und kann ihre technische Funktion erklären. Ich weiß, was Subnetting bedeutet und wozu es eingesetzt wird.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann Subnetze zu einer gegebenen IPv4-Adresse berechnen: Netzadresse, Broadcastadresse und maximale Hostanzahl bestimmen.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein Subnetzkonzept mit unterschiedlich großen Subnetzen, also VLSM, für ein komplexes Netzwerk planen und Fehler in bestehenden Konzepten erkennen und korrigieren.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>3. Binärsystem & Umrechnung</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann das Binärsystem erklären und verstehe, warum es in der Netzwerktechnik relevant ist.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann dezimale Zahlen in Binärzahlen umwandeln und umgekehrt, auch im Kontext von IP-Adressen und Subnetzmasken.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann beliebige IP-Adressen und Subnetzmasken binär darstellen und daraus Netz- und Broadcastadressen durch AND/OR-Operationen berechnen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>4. Broadcast- & Multicast</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was eine Broadcast-Domäne ist. Ich kenne die Begriffe Broadcast- und Multicastadresse und kann deren Funktion beschreiben.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann erklären, wie Broadcasts und Multicasts im Netzwerk weitergeleitet werden und welche Auswirkungen große Broadcast-Domänen haben.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein Netzwerk durch gezieltes Subnetting und VLANs in sinnvolle Broadcast-Domänen aufteilen und die Vorteile begründen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>5. OSI-Modell: Aufbau</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was das OSI-Modell ist, kann die sieben Schichten benennen und weiß, welche PDUs auf welcher Schicht verwendet werden.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann die Funktionen jeder OSI-Schicht erklären und typische Netzwerkgeräte wie Switch, Router, Hub und Firewall den richtigen Schichten zuordnen.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann den vollständigen Datenpfad eines konkreten Kommunikationsvorgangs, z. B. einer HTTP-Anfrage, schichtenweise durch das OSI-Modell verfolgen und erklären.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>6. OSI-Modell: Kapselung</h3><span class="badge badge-basic">Ausgewählt | Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was Datenkapselung im OSI-Modell bedeutet und kann die beteiligten Schichten benennen.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann den Kapselungsprozess, also Encapsulation, und die Dekapselung, also Decapsulation, Schritt für Schritt erklären und die jeweiligen Header benennen.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann anhand eines Wireshark-Mitschnitts oder einer Paketbeschreibung die Kapselungsebenen identifizieren und zuordnen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>7. Switching: Grundlagen</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, auf welcher OSI-Schicht ein Switch arbeitet. Ich weiß, was eine MAC-Adresse ist und wie lang sie ist.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann erklären, wie ein Switch MAC-Adressen lernt, also SAT, wie er Frames weiterleitet und welche Unterschiede es zwischen Store-and-Forward und Fragment-Free Switching gibt.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann Switch-Konfigurationen analysieren, Port-Security-Konzepte entwickeln und Switching-Probleme wie Loops erkennen und lösen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>8. Switching: Port-Security & Uplinks</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was ein Uplink-Port ist und welche Aufgabe er im Netzwerk hat.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann erklären, welche Aufgabe Port-Security hat, und die wichtigsten Konfigurationsoptionen beschreiben.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein Port-Security-Konzept für ein schulisches oder betriebliches Netzwerk entwerfen und dabei Sicherheitsanforderungen und praktische Einschränkungen abwägen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>9. VLANs: Grundlagen & Konfiguration</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was VLANs sind, wozu sie eingesetzt werden und in welchem Bereich VLAN-IDs liegen.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann VLANs auf Switches konfigurieren und erklären, wie VLAN-Tagging nach IEEE 802.1Q funktioniert, also Tagged/Untagged Ports und Trunk-Ports.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein VLAN-Konzept für ein Netzwerk mit mehreren Abteilungen planen, konfigurieren, dokumentieren und die Sicherheits- und Organisationsvorteile begründen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>10. WLAN: Grundlagen</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kenne die technischen Grundlagen von WLAN: SSID, Übertragungsmedium Funkwellen, Frequenzbereiche 2,4 GHz / 5 GHz und Antennengewinn dBi.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann erklären, wie WLAN-Kanäle genutzt werden, was MIMO bedeutet und welche Auswirkungen Hindernisse auf WLAN-Signale haben.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann einen WLAN-Ausleuchtungsplan für ein Gebäude erstellen, dabei Kanalüberlappungen vermeiden, die Sendeleistung optimieren und Sicherheitsanforderungen berücksichtigen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>11. WLAN: Sicherheit</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, welche Verschlüsselung WPA2 nutzt und kann erklären, warum WEP als unsicher gilt.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann die Unterschiede zwischen WEP, WPA und WPA2/WPA3 erklären und geeignete Sicherheitsmaßnahmen für ein WLAN empfehlen.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein sicheres WLAN-Konzept für ein Unternehmen entwerfen, das verschiedene Nutzergruppen, z. B. Mitarbeiter und Gäste, sicher trennt.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>12. DHCP: Grundlagen & DORA</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann die Funktion eines DHCP-Servers beschreiben, den Ablauf des DHCP-Prozesses erklären und weiß, was ein DHCP-Lease ist.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann den DHCP-DORA-Prozess Schritt für Schritt erklären, beschreiben, welche Informationen im Offer und ACK enthalten sind, und einen DHCP-Server konfigurieren.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein DHCP-Konzept für mehrere VLANs mit DHCP-Relay entwickeln, Lease-Zeiten sinnvoll planen und DHCP-Fehler systematisch analysieren und beheben.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>13. DHCP: Lease-Verwaltung</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was ein DHCP-Lease ist und wie lange eine IP-Adresse vergeben wird.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann erklären, wann und wie ein DHCP-Client seine Lease verlängert, also T1/T2-Timer, und was passiert, wenn die Verlängerung fehlschlägt.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann Lease-Zeiten für verschiedene Netzwerksituationen, z. B. großes Firmennetz vs. Gästenetz, begründet festlegen und die Auswirkungen auf die Netzwerkperformance erläutern.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>14. DNS: Grundlagen & Einrichtung</h3><span class="badge badge-basic">Ausgewählt | Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann die Funktion eines DNS-Servers beschreiben und erklären, welche Aufgabe DNS im Internet hat, nämlich Namensauflösung.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann einen einfachen DNS-Server einrichten und die wichtigsten DNS-Record-Typen A, AAAA, CNAME, MX und PTR benennen und anwenden.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein DNS-Konzept für eine interne Unternehmensdomäne planen, Forward- und Reverse-Lookupzonen einrichten und DNS-Fehler systematisch analysieren.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>15. Active Directory</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann die Funktion eines Verzeichnisdienstes erklären und weiß, wofür Active Directory in Unternehmen eingesetzt wird.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann Benutzer und Gruppen in einem Active Directory anlegen und Benutzerrechte über Gruppenrichtlinien verwalten.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann eine AD-Struktur für eine schulische oder betriebliche Organisation entwerfen, Sicherheitsrichtlinien umsetzen und typische AD-Probleme lösen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>16. VPN: Grundlagen & Tunnel</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, was ein VPN ist und wofür es eingesetzt wird.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann erklären, wie ein VPN-Tunnel funktioniert, und den Unterschied zwischen Split-Tunneling und Full-Tunneling beschreiben.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann ein VPN-Konzept für einen sicheren Fernzugang zu einem Unternehmensnetz planen, dabei Tunneling-Art, Protokolle und Sicherheitsanforderungen begründet auswählen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>17. VPN: IPsec & Verschlüsselung</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich weiß, welche Aufgabe IPsec hat.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kann den Unterschied zwischen AH, also Authentication Header, und ESP, also Encapsulating Security Payload, erklären und weiß, welche Aufgabe IKE beim Aufbau eines VPN-Tunnels hat.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann erklären, wie Diffie-Hellman beim Schlüsselaustausch funktioniert, und die Sicherheitseigenschaften verschiedener IPsec-Konfigurationen vergleichen und bewerten.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>18. Netzwerkdokumentation & IPAM</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann einfache Netzwerkpläne lesen und die wichtigsten Informationen wie IP-Adressen, Geräte und Verbindungen entnehmen.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich weiß, was eine IPAM, also IP Address Management, ist, welche Informationen sie enthalten muss, und kann Netzwerkpläne analysieren und interpretieren.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich kann eine vollständige Netzwerkdokumentation erstellen, z. B. IPAM-Tabelle, Topologieplan und Gerätebeschreibung, die von anderen Fachkräften direkt genutzt werden kann.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>19. Netzwerkanalyse & Fehlersuche</h3><span class="badge badge-basic">Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich habe einen Überblick über Netzwerksysteme und kann diesen durch Visualisierungen wie Topologiepläne darstellen.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich erkenne technische Zusammenhänge in Netzwerken und kann Netzwerkprobleme systematisch analysieren, z. B. mit dem OSI-Modell als Leitfaden.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich ziehe Konsequenzen aus dem Verständnis eines Netzwerksystems: Ich kann es analysieren, Schwachstellen identifizieren, anpassen oder weiterentwickeln und meine Entscheidungen fachlich begründen.</p></div>
+            </div>
+          </article>
+        </div>
+
+        <h3 style="margin: 28px 0 12px">Überfachliche Kompetenzen</h3>
+        <div class="appendix-grid">
+          <article class="competency-card">
+            <div class="competency-head"><h3>1. Systematisch-methodisches Vorgehen</h3><span class="badge badge-basic">Ausgewählt | Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann einen Arbeitsauftrag in Teilschritte zerlegen und weiß, in welcher Reihenfolge ich vorgehen muss.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich wende strukturierte Methoden an, z. B. Fehlereingrenzung nach OSI oder Top-Down-Analyse, dokumentiere mein Vorgehen nachvollziehbar und überprüfe meine Ergebnisse.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich entwickle eigenständig systematische Lösungsstrategien für komplexe technische Probleme, übertrage bewährte Methoden auf neue Situationen und erkläre mein Vorgehen anderen verständlich.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>2. Kommunikationsfähigkeit</h3><span class="badge badge-basic">Ausgewählt | Aktuell: BASIC</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann technische Sachverhalte in einfachen Sätzen beschreiben und meine Meinung im Team äußern.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich kommuniziere klar und situationsgerecht, sowohl im Team als auch gegenüber der Lehrkraft. Ich kann Fachbegriffe korrekt verwenden und auf Rückfragen eingehen.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich passe meine Kommunikation gezielt an die Zielgruppe an, z. B. Fachkollegen vs. Laien, moderiere Diskussionen konstruktiv und vermittle auch komplexe Netzwerkthemen verständlich und überzeugend.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>3. Teamarbeit</h3><span class="badge badge-expert">Aktuell: EXPERT</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann Aufgaben im Team aufteilen und halte vereinbarte Absprachen ein.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich bringe eigene Ideen konstruktiv ein, gehe auf Vorschläge anderer ein und helfe bei Konflikten, eine Lösung zu finden.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich übernehme Verantwortung für den Teamerfolg, koordiniere Arbeitsprozesse und gebe konstruktives Feedback, das das Team voranbringt.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>4. Selbstorganisation</h3><span class="badge badge-expert">Aktuell: EXPERT</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann meinen Lernprozess planen und weiß, welche Aufgaben ich bis wann erledigen muss.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich organisiere meine Arbeit selbstständig, setze Prioritäten und nutze geeignete Hilfsmittel wie Checklisten oder Zeitpläne.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich reflektiere regelmäßig meine Arbeitsweise, erkenne Optimierungspotenzial und passe meine Planung flexibel an neue Anforderungen an.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>5. Problemlösung</h3><span class="badge badge-pro">Aktuell: PRO</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann ein technisches Problem beschreiben und erste Lösungsideen benennen.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich gehe bei der Fehlersuche systematisch vor, z. B. Eingrenzen, Testen und Dokumentieren, und nutze geeignete Hilfsmittel.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich analysiere komplexe Netzwerkprobleme strukturiert, entwickle begründete Lösungsstrategien und übertrage gewonnenes Wissen auf neue Situationen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>6. Reflexion & Lernentwicklung</h3><span class="badge badge-expert">Aktuell: EXPERT</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann einschätzen, was ich bereits kann und wo ich noch Lücken habe.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich reflektiere meinen Lernprozess gezielt, erkenne Stärken und Schwächen und leite daraus konkrete nächste Schritte ab.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich bewerte meinen Lernfortschritt kritisch und differenziert, begründe meinen Notenvorschlag nachvollziehbar und erkenne überfachliche Lernentwicklungen.</p></div>
+            </div>
+          </article>
+
+          <article class="competency-card">
+            <div class="competency-head"><h3>7. Präsentation & Kommunikation</h3><span class="badge badge-pro">Aktuell: PRO</span></div>
+            <div class="competency-body">
+              <div class="competency-level"><span>Basic</span><p>Ich kann einfache technische Sachverhalte in eigenen Worten verständlich erklären.</p></div>
+              <div class="competency-level"><span>Pro</span><p>Ich präsentiere Arbeitsergebnisse strukturiert und adressatengerecht, setze Visualisierungen sinnvoll ein.</p></div>
+              <div class="competency-level"><span>Expert</span><p>Ich präsentiere komplexe Netzwerkkonzepte überzeugend, gehe auf Rückfragen ein und passe meine Kommunikation gezielt an die Zielgruppe an.</p></div>
+            </div>
+          </article>
+        </div>
+        <p class="print-note">
+          Hinweis: Das im Kompetenzbogen angegebene Datum „29.94.2026“ wurde als
+          offensichtlicher Zahlendreher auf das gültige Datum 29.04.2026 korrigiert.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
